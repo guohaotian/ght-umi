@@ -1,17 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import styles from './index.less';
+import React, { Component } from 'react'
+import { Button } from 'antd';
+import ProLayout, { PageContainer } from '@ant-design/pro-layout';
+import { connect } from 'dva';
 
-export default () => {
-  const [count, setCount] = useState(0);
+class Layout extends Component {
+    constructor(props) {
+        super(props)
+    }
 
-  useEffect(() => {
-    // 使用浏览器的 API 更新页面标题
-    document.title = `You clicked ${count} times`;
-  });
-  return (
-    <div>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
-    </div>
-  );
-};
+
+    componentDidMount() {
+        this.props.dispatch({
+            type: 'mock/getMock',
+            payload: {a: '111'},
+            cb: data => {}
+        })
+    }
+
+    render() {
+        const { data } = this.props
+        return (
+            <ProLayout layout='mix'>
+                <PageContainer
+                extra={[
+                    <Button key="3">Operating</Button>,
+                    <Button key="2">Operating</Button>,
+                    <Button key="1" type="primary">
+                    Main Operating
+                    </Button>,
+                ]}
+                footer={[<Button key='4' type="primary">submit</Button>]}
+                >
+                </PageContainer>
+            </ProLayout>
+        )
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        data: state.mock.data
+    }
+}
+export default connect(mapStateToProps)(Layout)
+
